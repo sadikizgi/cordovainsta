@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+    <title>yorumdüzenle</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+</head>
+<body>
+    <ul></ul>
+
+    <script>
+
+        basa();
+        function clicked(id) {
+            console.log($(this));
+            var e = {
+                "_method": "PUT",
+                comment: $("#comment").val(),
+            }
+
+            $.ajax({
+                url: 'http://instagram.exto.xyz/api/post_comment/' + id,
+                type: 'POST',
+                data: e,
+           })
+
+            .done(function (data) {
+                alert("Yorum düzenlendi.")
+                window.location.reload(false);
+                window.location = 'home.html';
+            })
+
+            .fail(function (data) {
+            alert('Yorum yapılamadı.')
+            alert(JSON.stringify(data));
+            });
+        }
+
+        function basa() {                                   //yorum.html in içindekiler
+
+            $(document).ready(function (post_id) {
+                var post_id = location.hash.substring(1);
+
+                $.getJSON('http://instagram.exto.xyz/api/post_comment', function (data) {
+
+                    $("ul").html('');
+
+                    $.each(data.message, function () {
+                        var id = this['id'];
+                        var comment = this['comment'];
+
+                        if (post_id == id) {
+                            $("ul").append("<li>Id: " + post_id + "<br>" +
+                                "Yorum :" + comment + "</br>" +
+                                "" + '<label class= "comment"> </label>' +
+                                "" + '<textarea class = "degistir" id="comment" ></textarea>' + "</br>" +
+                                "" + '<input type="button" onclick="clicked(' + id + ')"  value="Değiştir" class = "comment">' +
+                            //"" + '<input type="button" onclick="location=\'yorum.html#' + v.id + '\" value="Yorumlara Dön"' +
+                                "</br></div></li>");
+                        }
+                    });
+                });
+            });
+        }
+        
+    </script>
+
+</body>
+</html>

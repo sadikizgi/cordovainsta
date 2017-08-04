@@ -1,0 +1,11 @@
+textarea{
+	overflow: auto;
+	font-family: arial;
+        resize:none;
+        width: 250px;
+        height:50px;
+}
+
+
+
+

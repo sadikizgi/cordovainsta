@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+    <center>
+        <h1>KAYIT OL</h1>
+        <input type="text" placeholder="Email" class="email"><br /><br />       
+        <input type="password" placeholder="Password" class="password"><br>
+        <br />
+        <button class="act">KAYIT OL</button>
+    </center>
+    <br /><br />
+
+
+
+   
+    <!-- Latest compiled and minified CSS & JS -->
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+
+
+    <script>
+
+		$(document).ready(function() {                              //butona tıklanıdığında
+			$('.act').on('click', function(event) {
+				event.preventDefault();
+
+				if( $('.email').val().length == 0)                  // email alanı boş olduğunda
+				{
+					alert('eposta alanı boş bırakılamaz');
+					return;
+				}
+
+				if( $('.password').val().length == 0)               //şifre alnı boş olduğunda
+				{
+					alert('şifre alanı boş bırakılamaz');
+					return;
+				}
+				var d = {                                           // gelenleri kontrol ediyor
+					email : $('.email').val(),
+					password: $('.password').val(),
+				}
+			   
+
+				$.ajax({                                            // ajax kodu ile çekildi
+					url: 'http://instagram.exto.xyz/api/register',
+					type: 'POST',
+					data: d,
+				})
+
+				.done(function(data) {
+					alert('Kullanıcı Kayıt Başarılı');
+					window.id = data;
+
+				})
+				.fail(function() {
+					alert('Kullanıcı Kayıt Yapılamadı.')
+
+				})               
+
+			});
+		});
+
+
+    </script>
+
+
+</body>
+</html>

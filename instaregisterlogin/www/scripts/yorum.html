@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+    <title>YORUMLARA GÖZ AT</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+</head>
+<body>
+   
+    <ul></ul>                                                           
+    
+    <script>        //YORUMLARIN GÖSTERİLDİĞİ KISIM
+        basa();
+        function clicked(id) {
+
+
+
+            var e = {
+                "_method": "DELETE"
+
+            }
+            $.ajax({
+                url: 'http://instagram.exto.xyz/api/post_comment/' + id,
+                type: 'POST',
+                data: e,
+            })
+            alert('Silindi');
+            window.check = true;
+            window.location.reload(false);
+
+        }
+             
+        
+       
+                
+
+            
+        function basa() {                                   //yorum.html in içindekiler
+
+            $(document).ready(function (post_id) {
+                var post_id = location.hash.substring(1);
+                
+            
+                $.getJSON('http://instagram.exto.xyz/api/post_comment', function (data) {
+
+                    $("ul").html('');
+                    var id = this['id'];
+
+                    $("ul").append("<li>Id: " + post_id + "<br>" +                                        
+                                        "" + '<textarea class = "yorum" id="comment1" ></textarea>' + "</br>" +                                        
+                                        "" + '<input type="button"  data-post-id="' + id + '"  value="Yorum Yap" class = "comment">' + "</br>" +
+                                        "" + '<label class= "comment"></label>' + " <br><br></div></li>"                                         
+                                        );
+                   
+                    $.each(data.message, function (i, v) {                  // Sadece kendi yorum yaptıklarının yanında sil çıkar.
+
+                        if (v.post_id == post_id) {
+                            var text = "<li>" + v.user_id + ": " + v.comment;
+                            
+                            if (v.user_id == localStorage.getItem("id"))
+                            {
+                                text += '<input  onclick="clicked(' + v.id + ')" type="button" value="SİL"  id="sonuc" />';
+                                text += '<input  type = "button"  onclick="location=\'yorumduzenle.html#' + v.id + '\'" value="Düzenle" />';
+                            }
+
+                            text += "</li>";
+
+                                 
+                            $("ul").append(text);
+                              
+                        }
+
+
+                        return;
+                      
+                    });
+                    
+                });
+               
+
+                $(document).ready(function () {                              //YORUM YAP butonuna  tıklanıdığında
+
+                    $('body').on('click', '.comment', function () {
+
+                        console.log($(this));
+
+                        var pid = post_id;
+                        var user = localStorage.getItem("id");
+
+
+                        if ($(this).parent().find('.yorum').val().length == 0) {
+                            alert('Yorum alanı boş olamaz');
+                            return;
+                        }
+
+                        var d = {
+                            comment: $(this).parent().find('.yorum').val(),
+                            post_id: pid,
+                            user_id: user,
+                        }
+
+
+                        $.ajax({
+                            url: 'http://instagram.exto.xyz/api/post_comment',
+                            type: 'POST',
+                            data: d,
+                        })
+
+
+                        .done(function (data) {
+                            alert(pid);
+                            window.location.reload(false);
+                            window.comment = data;
+                            
+
+
+                        })
+                        .fail(function (data) {
+                            alert(' Yapılamadı.')
+                            alert(JSON.stringify(data));
+                        })
+
+                    });
+                });
+            });
+            
+        }
+
+
+
+
+    </script>
+
+</body>
+</html>

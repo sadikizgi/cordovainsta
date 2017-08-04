@@ -1,0 +1,19 @@
+{
+    "name": "instaregisterlogin",
+    "version": "1.0.0",
+    "private": true,
+    "dependencies": {
+        "cordova-plugin-camera": "2.4.1",
+        "cordova-plugin-whitelist": "1",
+        "cordova-plugin-compat": "1.1.0",
+        "cordova-plugin-vibration": "2.1.5"
+    },
+    "cordova": {
+        "plugins": {
+            "cordova-plugin-camera": {},
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-compat": {},
+            "cordova-plugin-vibration": {}
+        }
+    }
+}

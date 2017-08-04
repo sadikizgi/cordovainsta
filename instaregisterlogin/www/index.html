@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+    <center>
+        <h1>Giriş Paneli</h1>
+        <input type="text" placeholder="Email" class="email"><br /><br />
+        <input type="password" placeholder="Password" class="password"><br /><br />
+        <button class="act">GİRİŞ YAP</button>
+    </center>  
+    <br /><br>
+    <center> <a href="scripts/uyekayit.html">KAYIT OL </a> </center>
+
+    
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+
+    <script>
+
+		$(document).ready(function() {                              //butona tıklanıdığında
+			$('.act').on('click', function(event) {
+			    event.preventDefault();
+			    
+
+				if( $('.email').val().length == 0)                  // email alanı boş olduğunda
+				{
+					alert('eposta alanı boş bırakılamaz');
+					return;
+				}
+
+				if( $('.password').val().length == 0)               //şifre alnı boş olduğunda
+				{
+					alert('şifre alanı boş bırakılamaz');
+					return;
+				}
+				var d = {                                           // gelenleri kontrol ediyor
+					email : $('.email').val(),
+					password : $('.password').val(),
+				}
+
+
+				$.ajax({                                           
+					url: 'http://instagram.exto.xyz/api/login',
+					type: 'POST',
+					data: d,
+				})
+
+
+
+				.done(function (data) {
+                    
+					alert('Kullanıcı Girişi Başarılı');
+					window.id = data;
+					alert(data.id);
+					window.location = 'scripts/home.html';
+					localStorage.setItem("id", data.id)
+                   
+				 
+				})
+				.fail(function() {
+					alert('Kullanıcı Giriş Yapılamadı.')
+
+				})
+			});
+		});
+
+
+    </script>
+</body>
+</html>

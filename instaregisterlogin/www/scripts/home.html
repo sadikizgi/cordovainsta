@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="cordova.js"></script>
+    <title>AnaSayfa</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <title>Document</title>
+     <link href="../css/index.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <button class="cameraButton" > Kamera Aç</button>   
+    <button class="galeri"> GALERİ </button>  
+   
+
+
+        
+    <ul></ul>
+    
+     
+ 
+<script>    //FOTOLAR API'DEN ÇEKİLDİ VE LİKE İŞLEMİ YAPILDI
+    bas();
+    //bas2();
+    function clicked(id) //LİKE İŞLEMLERİ
+    {
+       
+        var user_id = localStorage.getItem("id");                           //BEĞENİYİ 2. KERE BEĞENE ME DİE KONTROL YAPIYOR .Aynı zamanda hiç beğenip beğenmediğinide kontrol ediyor.
+
+        $.getJSON('http://instagram.exto.xyz/api/post_like', function (data) {
+            window.check = false;
+            $.each(data.message, function (i, v) {
+                if (v.post_id == id &&  v.user_id == user_id && window.check == false)  {                     
+                    var e = {                                                                  
+                        "_method":"DELETE"
+                    }
+                    $.ajax({                                            
+                        url: 'http://instagram.exto.xyz/api/post_like/' + v.id,
+                        type: 'POST',
+                        data: e,
+                    })                                     
+                    alert('Beğenmen geri Alındı');
+                    window.location.reload(false);
+                    window.check = true;
+                }
+            });
+            if (window.check == true)
+                return;
+            var d = {
+                user_id: user_id,
+                post_id: id,
+            }
+            $.ajax({
+                url: 'http://instagram.exto.xyz/api/post_like',
+                type: 'POST',
+                data: d,
+            })
+                .done(function (data) {
+                    alert('BEĞENDİN');
+                    window.location.reload(false);
+                    window.id = data;
+
+                })
+            .fail(function (data) {
+                alert('OLMADI.')
+                alert(JSON.stringify(data))
+            })
+
+        });
+        
+    }
+    function bas() {
+        $.getJSON('http://instagram.exto.xyz/api/post', function (data) {
+            $("ul").html('');
+            
+            $.each(data.message, function () {
+                var id = this['id'];               
+                var count = 0;
+                var image = this['image'];
+                var user_id = this['user_id'];
+                var description = this['description'];
+
+
+                $.getJSON('http://instagram.exto.xyz/api/post_like', function (data) {  //Post like a gönderilen beğeni post_id ile id aynımı onu kontrol eder                   
+
+                   
+                    $.each(data.message, function (i, v) {                               // burdaki 'v' value dur. 
+                        if (v.post_id == id) {
+                            count++;
+                        }                      
+                    });
+                                            
+                    $("ul").append("Id: " + id + "" +
+                    "<div><img width='250px' height='250px' src='" + "http://instagram.exto.xyz/" + image + "'/>" +
+                    "Açıklama :" + description + "</br>" +
+                    "" + '<input  onclick="clicked(' + id + ')" type="button" value="' + count + '" id="sonuc" />' +
+                    "" + '<button onclick = "location=\'aciklama.html#' + id + '\'"> Düzenle </button>' +
+                    "" + '<button  onclick="location=\'yorum.html#' + id + '\'">Yorum yap</button> </div></br></br>'
+
+                     );
+
+
+                });                
+            });                                                                         
+        });
+    }
+
+    $(document).ready(function() {
+        $('.buton').on('click', function() {
+            bas();
+        });
+    });
+      
+
+
+ </script>   
+              
+</body>
+</html>
+
+<script> // KAMERA 
+    $(document).ready(function(){
+        $('.cameraButton').on('click', function () {
+            alert("Kamera açıldı");
+            navigator.camera.getPicture(function cameraSuccess(imageUri) {
+
+               alert("image src:" +  imageUri);
+
+            }, function cameraError(error) {
+                console.debug("Unable to obtain picture: " + error, "app");
+                alert("Kamerada sorun oluştu");
+            },{});
+        });
+    });
+
+    function openCamera() {
+        navigator.camera.getPicture(function cameraSuccess(imageUri) {
+
+           alert("image src:" +  imageUri);
+
+        }, function cameraError(error) {
+            console.debug("Unable to obtain picture: " + error, "app");
+            alert("Kamerada sorun oluştu");
+        },{});
+    }    
+</script>
+
